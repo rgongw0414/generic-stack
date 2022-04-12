@@ -42,8 +42,8 @@ void push(stack* myStack, void* data){
 	}
 	(myStack->top)++;
 	size_t top_offset = myStack->typeSize * (size_t)myStack->top; // e.g. when stack data type is int, offset = top_index * 4;
-// when char, offset = top_index * 1;
-// offset = top_index * sizeof(dataType);
+                                                                    // when char, offset = top_index * 1;
+                                                                    // offset = top_index * sizeof(dataType);
 	// push the data by "memory trick"
 	for (int i = 0; i < (int)myStack->typeSize; i++){
 		// copy the data "Byte by Byte"
