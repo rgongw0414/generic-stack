@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
+#include "stack.h"
+/*
 typedef enum{
 	STACK_INT,
 	STACK_CHAR,
@@ -9,24 +11,16 @@ typedef enum{
 	STACK_STRUCT,
 	ELSE
 }dataType;
+*/
 
-
-/* for dev testing
+// for dev testing
 typedef struct pikachu{
 	char* name;
 	int CP;
 }pikachu;
-*/
 
-/*  
-size_t dataTypeSize(dataType type){
-	if (type == STACK_INT) return sizeof(int);
-	else if (type == STACK_CHAR) return sizeof(char);
-	else if (type == STACK_FLOAT) return sizeof(float);
-	else if (type == STACK_DOUBLE) return sizeof(double);
-	else return (size_t)0;
-}*/
 
+/*
 typedef struct stack{
 	dataType type;
 	size_t typeSize; // data typeSize
@@ -34,7 +28,7 @@ typedef struct stack{
 	void* data; // data to store in stack
 	int top; // index of top data in stack
 }stack;
-
+*/
 void push(stack* myStack, void* data){
 	if (myStack->top + 1 >= myStack->len){
 		fputs("stack is full!\n", stdout);
@@ -45,11 +39,13 @@ void push(stack* myStack, void* data){
                                                                     // when char, offset = top_index * 1;
                                                                     // offset = top_index * sizeof(dataType);
 	// push the data by "memory trick"
+    memcpy(myStack->data + top_offset, data, myStack->typeSize);
+    /* p.s. the following are literally doing "memcpy(myStack->data + top_offset, data, myStack->typeSize)"
 	for (int i = 0; i < (int)myStack->typeSize; i++){
 		// copy the data "Byte by Byte"
 		// Assumption: char takes 1 Byte.
 		*(char*)(myStack->data + top_offset + i) = *((char*)(data + i));
-	}
+	}*/
 
 	/* the following is safer implementation:
 	if (myStack->type == STACK_INT)
@@ -97,6 +93,20 @@ void pop(stack* myStack){
 	*/
 }
 
+int is_empty(stack* myStack){
+    return(myStack->top == -1);
+}
+
+void* get_top(stack* myStack){
+    if (is_empty(myStack)){
+        fprintf(stderr, "Can not pop from an empty stack.\n");
+        return NULL;
+    }
+    void* top = (void*)malloc(myStack->typeSize);
+    if (top == NULL) return NULL;
+    memcpy(top, myStack->data + myStack->top * myStack->typeSize, myStack->typeSize);
+    return top;
+}
 
 void stackPrint(stack* myStack){
 	if (myStack->type == STACK_INT)
@@ -109,19 +119,24 @@ void stackPrint(stack* myStack){
 		for (int i = 0; i <= myStack->top; i++)	printf("%lf ", ((double*)myStack->data)[i]);
 	else{
 		fputs("dataType not supported!\nplease print by youself.", stdout);
+        /* e.g. 
+        printf("stack:\n");
+        for (int i = 0; i <= myStack->top; i++)
+            printf("name: %s, price: %d\n", ((car*)myStack->data)[i].name, ((car*)myStack->data)[i].price);*/
 	}
 	printf("\n");
 }
 
 
 stack* stackCreate(dataType type, size_t len, size_t typeSize){
-	//size_t typeSize = dataTypeSize(type);
 	if (typeSize <= 0) return NULL;
-	stack* myStack = malloc(sizeof(stack));
+	stack* myStack = (stack*)malloc(sizeof(stack));
+    if (myStack == NULL) return NULL;
 	myStack->type = type;
 	myStack->typeSize = typeSize;
 	myStack->len = len;
-	myStack->data = malloc(typeSize * len);
+	myStack->data = (void*)malloc(typeSize * len);
+    if (myStack->data == NULL) return NULL;
 	myStack->top = -1;
 	return myStack;
 }
@@ -139,14 +154,14 @@ int main(int argc, char* argv[]){
 		printf("CP: %i\n", ((pikachu*)myStack->data)[myStack->top].CP);
 	}
 	
-	stack* myStack = stackCreate(STACK_INT, 5, sizeof(int));
+	stack* myStack2 = stackCreate(STACK_INT, 5, sizeof(int));
 	int* value = malloc(sizeof(int));
 	for (int i = 0; i < 10; i++){
 		*value = i + 1;
 		if (i <= 4)
-			push(myStack, value);
+			push(myStack2, value);
 		else
-			pop(myStack);
-		stackPrint(myStack);
+			pop(myStack2);
+		stackPrint(myStack2);
 	}
 }*/

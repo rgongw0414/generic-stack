@@ -1,4 +1,6 @@
-#include "stack.c"
+#include "stack.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct car{
           char* name;
@@ -11,31 +13,37 @@ int main(int argc, char* argv[]){
 	myCar->name = "toyota";
 	myCar->price = 100;
 	push(myStack, myCar);
-	printf("name: %s, price: %d\n", ((car*)myStack->data)[myStack->top].name, ((car*)myStack->data)[myStack->top].price);
-	
+    car* top = (car*)get_top(myStack);
+    printf("name: %s, price: %d\n", top->name, top->price);
 
 	myCar->name = "suzuki";
 	myCar->price = 300;
 	push(myStack, myCar);
-	printf("name: %s, price: %d\n", ((car*)myStack->data)[myStack->top].name, ((car*)myStack->data)[myStack->top].price);
+    top = (car*)get_top(myStack);
+    printf("name: %s, price: %d\n", top->name, top->price);
+
 
 	myCar->name = "kia";
 	myCar->price = 500;
 	push(myStack, myCar);
-	printf("name: %s, price: %d\n", ((car*)myStack->data)[myStack->top].name, ((car*)myStack->data)[myStack->top].price);
+    top = (car*)get_top(myStack);
+    printf("name: %s, price: %d\n", top->name, top->price);
 
 	myCar->name = "benz";
 	myCar->price = 1000;
 	push(myStack, myCar);
-	printf("name: %s, price: %d\n", ((car*)myStack->data)[myStack->top].name, ((car*)myStack->data)[myStack->top].price);
+    top = (car*)get_top(myStack);
+    printf("name: %s, price: %d\n", top->name, top->price);
 
 	pop(myStack);
 	myCar->name = "benz";
 	myCar->price = 1000;
 	push(myStack, myCar);
-	printf("name: %s, price: %d\n", ((car*)myStack->data)[myStack->top].name, ((car*)myStack->data)[myStack->top].price);
+    top = (car*)get_top(myStack);
+    printf("name: %s, price: %d\n", top->name, top->price);
 
-	printf("stack:\n\n");
-	for (int i = 0; i <= myStack->top; i++)
+	printf("stack:\n");
+	for (int i = 0; i <= myStack->top; i++){
 		printf("name: %s, price: %d\n", ((car*)myStack->data)[i].name, ((car*)myStack->data)[i].price);
+    }
 }
